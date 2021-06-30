@@ -1,0 +1,16 @@
+# pip install -U -r requirements.txt
+# Should occasionally run without version numbers to try upgrading
+
+# Code quality
+black==21.5b2
+flake8==3.9.2
+isort==5.8.0
+mypy==0.812
+pre-commit==2.13.0
+
+# pytest
+pytest==6.2.4
+pytest-cov==2.12.1
+
+# GUI
+kivy==1.11.1
