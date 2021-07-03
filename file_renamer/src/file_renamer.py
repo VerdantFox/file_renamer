@@ -2,7 +2,7 @@
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from file_renamer.src.main import MainPage
 
 
@@ -21,7 +21,6 @@ class FileRenamer:
         self.prepend = (
             kivy_gui.prepend_filename_input.text.strip()
             .replace(" ", "_")
-            .replace("-", "_")
             .replace(".", "")
         )
         self.extensions = self.get_extensions(kivy_gui.extensions_input.text.lower())
@@ -31,7 +30,7 @@ class FileRenamer:
         # Attributes calculated by `rename_files()`
         self.relevant_files: list[Path] = []
         self.total_relevant_files = 0
-        self.padding = 1
+        self.padding = 0
 
     @staticmethod
     def get_extensions(extensions_string: Optional[str]) -> list[str]:
@@ -76,12 +75,9 @@ class FileRenamer:
     def get_padding(self) -> None:
         """Get padding size from total_relevant_files count"""
         remaining_files = float(self.total_relevant_files)
-        while True:
+        while remaining_files >= 1:
+            self.padding += 1
             remaining_files /= 10
-            if remaining_files > 1:
-                self.padding += 1
-            else:
-                break
 
     def rename_files(self) -> None:
         """Main function for renaming files"""

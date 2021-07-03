@@ -3,5 +3,5 @@
 set -euo pipefail
 cd "$(dirname "$0")/.." || return
 
-pytest --cov=src --cov-report=html "$@"
+pytest --cov=file_renamer/src --cov-report=html "$@"
 echo "pytest passes..."
