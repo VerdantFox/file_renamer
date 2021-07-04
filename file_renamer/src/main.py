@@ -173,7 +173,7 @@ class FolderSelectorPage(GridLayout):
         self.back_btn = Button(text="Back", font_size=18, background_color=RED)
         self.back_btn.bind(on_press=self.go_back)
         self.select_btn = Button(text="Select", font_size=18, background_color=TEAL)
-        self.select_btn.bind(on_press=self.select_file)
+        self.select_btn.bind(on_press=self.confirm_selection)
         self.row_1 = GridLayout(cols=2, size_hint_y=None)
         self.row_1.add_widget(self.back_btn)
         self.row_1.add_widget(self.select_btn)
@@ -205,10 +205,9 @@ class FolderSelectorPage(GridLayout):
             dirselect=True,
             size_hint_y=None,
         )
-        self.folder_select.bind(on_submit=self.select_file)
         self.add_widget(self.folder_select)
 
-        Clock.schedule_interval(self.update_selected_label, 0.05)
+        Clock.schedule_interval(self.update_selected_label, 0)
 
     def update_selected_label(self, _) -> None:
         """frequently update self.selected_label"""
@@ -219,13 +218,11 @@ class FolderSelectorPage(GridLayout):
             self.folder_select.selection = [file_path]
             self.selected_label.text = file_path
 
-    def select_file(self, _filechooser, selection: str, _touch) -> None:
-        """Called by button or double click, selects file and returns to main screen"""
-        if len(self.folder_select.selection) == 1:
-            # Select button was used, get selection from label text
-            selection = self.selected_label.text
-        else:
+    def confirm_selection(self, _) -> None:
+        """Called by button, confirms folder selection and returns to main screen"""
+        if len(self.folder_select.selection) != 1:
             return
+        selection = self.selected_label.text
         self.describing_label.text = self.describing_label_text
         path = Path(selection)
         if path.is_dir():
@@ -301,8 +298,3 @@ class FileRenamerApp(App):
         # Make labels wrap at half window size
         label_width, label_height = width * 0.48, height / 5  # 5 rows
         self.main_page.folder_loc_label.text_size = [label_width, label_height]
-
-
-if __name__ == "__main__":
-    app = FileRenamerApp()
-    app.run()
