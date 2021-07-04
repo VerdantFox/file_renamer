@@ -12,5 +12,9 @@ pre-commit==2.13.0
 pytest==6.2.4
 pytest-cov==2.12.1
 
+# Packaging
+pyinstaller==4.3
+
 # GUI
 Kivy==2.0.0
+pyenchant==3.2.1

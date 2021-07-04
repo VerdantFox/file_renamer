@@ -6,7 +6,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.uix.button import Button
 
-from file_renamer.src.main import FileRenamerApp
+from file_renamer.src.gui import FileRenamerApp
 
 from .conftest import FOLDER_LOC_MSG, assert_changes
 

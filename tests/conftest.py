@@ -5,7 +5,7 @@ from typing import Optional
 
 import pytest
 
-from file_renamer.src.main import MainPage
+from file_renamer.src.gui import MainPage
 
 TEST_DATA_DIR = Path(__file__).parents[1].joinpath("test_data")
 TEST_FILES = sorted([path.name for path in TEST_DATA_DIR.iterdir()])

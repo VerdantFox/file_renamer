@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from file_renamer.src.file_renamer import FileRenamer
-from file_renamer.src.main import MainPage
+from file_renamer.src.gui import MainPage
 
 from .conftest import (
     FOLDER_LOC_MSG,

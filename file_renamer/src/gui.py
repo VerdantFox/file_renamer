@@ -8,6 +8,7 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.config import Config
 from kivy.core.window import Window
+from kivy.lang import Builder
 from kivy.uix.button import Button
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.gridlayout import GridLayout
@@ -16,11 +17,15 @@ from kivy.uix.progressbar import ProgressBar
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.textinput import TextInput
 
+from file_renamer.src.__init__ import __version__
 from file_renamer.src.file_renamer import FileRenamer
 
 # ------------------------------------------------------------------------
 # GLOBALS
 # ------------------------------------------------------------------------
+# App version
+VERSION = __version__
+
 # Paths
 HOME_DIR = Path.home()
 
@@ -38,6 +43,53 @@ kivy.require("2.0.0")
 Config.set("input", "mouse", "mouse,multitouch_on_demand")
 Window.size = (600, 500)
 Window.minimum_width, Window.minimum_height = (600, 350)
+
+# Kivy file for updating FileChooserListView font size
+KV = """
+#:kivy 2.0.0
+
+# Set variables
+#:set fs '16dp'
+
+[FileListEntry@FloatLayout+TreeViewNode]:
+    locked: False
+    entries: []
+    path: ctx.path
+    # FIXME: is_selected is actually a read_only treeview property. In this
+    # case, however, we're doing this because treeview only has single-selection
+    # hardcoded in it. The fix to this would be to update treeview to allow
+    # multiple selection.
+    is_selected: self.path in ctx.controller().selection
+
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: '60dp' if dp(1) > 1 else '30dp'  # height must be big enough to hold font sized below
+    # Don't allow expansion of the ../ node
+    is_leaf: not ctx.isdir or ctx.name.endswith('..' + ctx.sep) or self.locked
+    on_touch_down: self.collide_point(*args[1].pos) and ctx.controller().entry_touched(self, args[1])
+    on_touch_up: self.collide_point(*args[1].pos) and ctx.controller().entry_released(self, args[1])
+    BoxLayout:
+        pos: root.pos
+        size_hint_x: None
+        width: root.width
+        Label:
+            id: filename
+            font_size: fs  # adjust this font size
+            size_hint_x: None
+            width: root.width - sz.width  # this allows filename Label to fill width less size Label
+            text_size: self.width, None
+            halign: 'left'
+            shorten: True
+            text: ctx.name
+        Label:
+            id: sz
+            font_size: fs  # adjust this font size
+            #text_size: self.width, None
+            size_hint_x: None
+            width: self.texture_size[0] + dp(18)  # this makes the size Label to minimum width
+            text: '{}'.format(ctx.get_nice_size())
+
+"""
 
 
 # ------------------------------------------------------------------------
@@ -246,6 +298,11 @@ class FileRenamerApp(App):
 
     def build(self) -> ScreenManager:
         """Build the sceen manager's pages"""
+        # Title of App in top bar of GUI
+        self.title = f"File Renamer (V{VERSION})"
+        # Load KV string for updating FileChooserListView font size
+        self.root = Builder.load_string(KV)
+
         # Use screen manager to easily change between screens
         self.screen_manager = ScreenManager()
 
