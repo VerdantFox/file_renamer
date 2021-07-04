@@ -4,14 +4,17 @@ from pathlib import Path
 import pytest
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.uix.button import Button
 
 from file_renamer.src.main import FileRenamerApp
 
 from .conftest import FOLDER_LOC_MSG, assert_changes
 
+setup_type = tuple[FileRenamerApp, str, str]
+
 
 @pytest.fixture
-def setup(copy_files):
+def setup(copy_files: Path) -> setup_type:
     """Set up a FileRenamerApp"""
     test_folder = str(copy_files)
     test_file = str(list(copy_files.iterdir())[0])
@@ -21,7 +24,7 @@ def setup(copy_files):
     return app, test_folder, test_file
 
 
-def press_button(button):
+def press_button(button: Button) -> None:
     """Press the given button"""
     button.dispatch("on_press")
     Clock.tick()
@@ -29,7 +32,7 @@ def press_button(button):
     Clock.tick()
 
 
-def reset_folder_selection(app):
+def reset_folder_selection(app: FileRenamerApp) -> None:
     """Resets folder selection to original value"""
     app.folder_selector_page.folder_select.selection = []
     app.folder_selector_page.selected_label.text = ""
@@ -37,13 +40,13 @@ def reset_folder_selection(app):
     Clock.tick()
 
 
-def btn_to_folder_select(app):
+def btn_to_folder_select(app: FileRenamerApp) -> None:
     """Press button to go to main page and assert there"""
     press_button(app.main_page.folder_loc_btn)
     assert app.screen_manager.current == "FolderSelect"
 
 
-def test_rename_succeeds(setup):
+def test_rename_succeeds(setup: setup_type) -> None:
     """Test running filerenamer through GUI"""
     app, test_folder, test_file = setup
     app.main_page.folder_loc_label.text = test_folder
@@ -61,7 +64,7 @@ def test_rename_succeeds(setup):
     )
 
 
-def test_folder_selector(setup):
+def test_folder_selector(setup: setup_type) -> None:
     """Test the app folder selector page"""
     app, test_folder, test_file = setup
     # Click Button to go to FolderSelectPage
@@ -96,7 +99,7 @@ def test_folder_selector(setup):
     assert app.main_page.folder_loc_label.text == test_folder
 
 
-def test_filedrop(setup):
+def test_filedrop(setup: setup_type) -> None:
     """Test the app folder selector page"""
     app, test_folder, test_file = setup
 
