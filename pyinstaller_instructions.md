@@ -30,8 +30,6 @@ python -m PyInstaller file_renamer.spec
 python -m PyInstaller cli.py --name file_renamer --onefile
 ```
 
-Note: The hidden import was found when trying to run the produced executable
-
 ### If spec already exists
 
 ```bash

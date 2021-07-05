@@ -41,6 +41,7 @@ RED = (245 / 255, 44 / 255, 44 / 255, 1)
 # Kivy
 kivy.require("2.0.0")
 Config.set("input", "mouse", "mouse,multitouch_on_demand")
+Config.set("kivy", "window_icon", "new_file.png")
 Window.size = (600, 500)
 Window.minimum_width, Window.minimum_height = (600, 350)
 
@@ -302,6 +303,7 @@ class FileRenamerApp(App):
         self.title = f"File Renamer (V{VERSION})"
         # Load KV string for updating FileChooserListView font size
         self.root = Builder.load_string(KV)
+        self.icon = "new_file.png"
 
         # Use screen manager to easily change between screens
         self.screen_manager = ScreenManager()
