@@ -8,9 +8,7 @@
 python -m PyInstaller cli.py --name file_renamer --onefile --hidden-import pkg_resources.py2_warn --hidden-import win32timezone --icon new_file.ico
 ```
 
-Rename spec to `file_renamer.spec`
-
-### Update spec with the following lines
+### Update spec (`file_renamer.spec`) with the following lines
 
 `from kivy_deps import sdl2, glew` at top of file
 
